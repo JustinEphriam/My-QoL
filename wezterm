@@ -1,0 +1,44 @@
+local wezterm = require 'wezterm'
+
+local config = {}
+
+-- Set up WSL2 Debian as a launch option
+config.default_prog = { 'wsl.exe', '-d', 'Debian', '--cd', '~' }
+
+-- Optional: Set a keybinding to launch Debian
+config.keys = {
+  {
+    key = 'D',
+    mods = 'CTRL|SHIFT',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { 'wsl.exe', '-d', 'Debian' },
+    },
+  },
+  
+  -- Copy to clipboard using clip.exe
+  {
+    key = 'C',
+    mods = 'CTRL|SHIFT',
+    action = wezterm.action_callback(function(window, pane)
+      window:copy_to_clipboard(window:get_selection_text_for_pane(pane))
+      window:perform_action(wezterm.action.SendString("| clip.exe\n"), pane)
+    end),
+  },
+}
+
+-- Set cursor style
+config.default_cursor_style = 'BlinkingBlock' -- Options: 'BlinkingBlock', 'BlinkingUnderline', 'BlinkingBar', 'Block', 'Underline', 'Bar'
+
+-- Window configurations
+config.window_decorations = "RESIZE"
+config.window_background_opacity = 0.97
+
+-- Other configurations
+config.color_scheme = 'Kimber (base16)'
+config.font = wezterm.font 'JetBrains Mono'
+config.font_size = 13.0
+config.freetype_load_target = 'Light'
+config.freetype_render_target = 'HorizontalLcd'
+
+
+return config
