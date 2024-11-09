@@ -1,44 +1,43 @@
 local wezterm = require 'wezterm'
-
 local config = {}
 
--- Set up WSL2 Debian as a launch option
-config.default_prog = { 'wsl.exe', '-d', 'Debian', '--cd', '~' }
-
--- Optional: Set a keybinding to launch Debian
 config.keys = {
-  {
-    key = 'D',
-    mods = 'CTRL|SHIFT',
-    action = wezterm.action.SpawnCommandInNewTab {
-      args = { 'wsl.exe', '-d', 'Debian' },
+    -- Example Linux clipboard integration
+    {
+        key = 'C',
+        mods = 'CTRL|SHIFT',
+        action = wezterm.action.CopyTo 'Clipboard',
     },
-  },
-  
-  -- Copy to clipboard using clip.exe
-  {
-    key = 'C',
-    mods = 'CTRL|SHIFT',
-    action = wezterm.action_callback(function(window, pane)
-      window:copy_to_clipboard(window:get_selection_text_for_pane(pane))
-      window:perform_action(wezterm.action.SendString("| clip.exe\n"), pane)
-    end),
-  },
+    {
+        key = 'V',
+        mods = 'CTRL|SHIFT',
+        action = wezterm.action.PasteFrom 'Clipboard',
+    },
 }
 
--- Set cursor style
-config.default_cursor_style = 'BlinkingBlock' -- Options: 'BlinkingBlock', 'BlinkingUnderline', 'BlinkingBar', 'Block', 'Underline', 'Bar'
+-- Performance optimizations for native
+config.front_end = "OpenGL"  -- Better GPU acceleration on Linux
+config.animation_fps = 1     -- Reduce animations for better performance
+config.max_fps = 240        -- Higher refresh rate support
 
--- Window configurations
+-- Keep your existing aesthetic preferences
+config.default_cursor_style = 'BlinkingBlock'
 config.window_decorations = "RESIZE"
-config.window_background_opacity = 0.97
-
--- Other configurations
+config.window_background_opacity = 0.90
 config.color_scheme = 'Kimber (base16)'
 config.font = wezterm.font 'JetBrains Mono'
 config.font_size = 13.0
+
+-- Font rendering (Linux-optimized)
 config.freetype_load_target = 'Light'
 config.freetype_render_target = 'HorizontalLcd'
 
+-- Optional: Linux-specific optimizations
+config.enable_wayland = true  -- If you're using Wayland
+config.term = "wezterm"      -- Better terminal compatibility
+config.enable_tab_bar = true -- If you're using Neovim's tabs
+
+-- Optional: Better GPU performance
+config.webgpu_preferred_adapter = wezterm.gui.enumerate_gpus()[1]
 
 return config
