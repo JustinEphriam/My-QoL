@@ -1,0 +1,8 @@
+font-family = "Fira Mono"
+font-size = 14
+theme = "catppuccin-mocha"
+cursor-style = "block"
+cursor-style-blink = true
+mouse-hide-while-typing = true
+window-vsync = true
+background-opacity = 1.0
